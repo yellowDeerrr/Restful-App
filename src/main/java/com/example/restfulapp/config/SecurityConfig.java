@@ -25,13 +25,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                     .authorizeHttpRequests()
-                    .antMatchers("/**").permitAll()
-                    .antMatchers("/api/auth/**").permitAll()
-                    .antMatchers("/api/test/**").permitAll()
-                    .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 .and()
-                .formLogin(Customizer.withDefaults());
+                .formLogin(Customizer.withDefaults())
 //                    .isCustomLoginPage();
+                 .logout(Customizer.withDefaults());
     }
 
     @Bean
