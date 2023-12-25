@@ -1,59 +1,49 @@
 package com.example.restfulapp.controllers;
 
+import com.example.restfulapp.entity.UserEntity;
+import com.example.restfulapp.payload.request.auth.LoginRequest;
+import com.example.restfulapp.payload.request.user.edit.EditPasswordRequest;
+import com.example.restfulapp.payload.request.user.edit.EditUsernameRequest;
+import com.example.restfulapp.payload.response.LoginResponse;
+import com.example.restfulapp.repositories.UserRepository;
+import com.example.restfulapp.security.CustomUserDetails;
 import com.example.restfulapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
     @Autowired
     private UserService userService;
-    static class EditUsernameRequest {
-        private String username;
-        private String password;
-        private String newUsername;
-
-        public EditUsernameRequest() {
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        public String getNewUsername() {
-            return newUsername;
-        }
-
-        public void setNewUsername(String newUsername) {
-            this.newUsername = newUsername;
-        }
+    @GetMapping("/you")
+    public ResponseEntity<?> getUserData(Authentication authentication){
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        return ResponseEntity.ok(new LoginResponse(customUserDetails.getId(),
+                customUserDetails.getUsername(),
+                customUserDetails.getAuthorities().stream()
+                        .map(item -> item.getAuthority())
+                        .collect(Collectors.toList())));
     }
-
-    @PostMapping("/edit/username")
+    @PutMapping("/edit/username")
     public ResponseEntity<?> editUsername(@RequestBody EditUsernameRequest request) {
         String res = userService.editUsername(request.getUsername(), request.getPassword(), request.getNewUsername());
         return res.equals("Successful") ? ResponseEntity.ok(res) : ResponseEntity.badRequest().body(res);
     }
-    @PostMapping("/edit/password")
-    public ResponseEntity<?> editPassword(@RequestBody String username, @RequestBody String password, @RequestBody String newPassword){
-        String res = userService.editPassword(username, password, newPassword);
+    @PutMapping("/edit/password")
+    public ResponseEntity<?> editPassword(@RequestBody EditPasswordRequest request){
+        String res = userService.editPassword(request.getUsername(), request.getPassword(), request.getNewPassword());
+        return res.equals("Successful") ? ResponseEntity.ok(res) : ResponseEntity.badRequest().body(res);
+    }
+
+    @DeleteMapping("/delete/account")
+    public ResponseEntity<?> deleteAccount(@RequestBody LoginRequest usernameAndPassword){
+        String res = userService.deleteAccount(usernameAndPassword.getUsername(), usernameAndPassword.getPassword());
         return res.equals("Successful") ? ResponseEntity.ok(res) : ResponseEntity.badRequest().body(res);
     }
 }

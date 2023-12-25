@@ -1,4 +1,4 @@
-package com.example.restfulapp.payload.request;
+package com.example.restfulapp.payload.request.auth;
 
 public class SignupRequest {
     private String username;

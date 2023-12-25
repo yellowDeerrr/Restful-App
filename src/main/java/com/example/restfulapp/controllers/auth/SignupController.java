@@ -4,7 +4,7 @@ import com.example.restfulapp.entity.Role;
 import com.example.restfulapp.entity.UserEntity;
 import com.example.restfulapp.repositories.RoleRepository;
 import com.example.restfulapp.repositories.UserRepository;
-import com.example.restfulapp.payload.request.SignupRequest;
+import com.example.restfulapp.payload.request.auth.SignupRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;

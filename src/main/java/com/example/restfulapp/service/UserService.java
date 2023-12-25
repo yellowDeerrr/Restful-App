@@ -49,4 +49,19 @@ public class UserService {
         else
             return "Username not found";
     }
+
+    public String deleteAccount(String username, String password){
+        Optional<UserEntity> user = userRepository.findByUsername(username);
+        if (user.isPresent())
+
+            if (passwordEncoder.matches(password, user.get().getPassword())){
+
+                userRepository.delete(user.get());
+
+                return "Successful";
+            }else
+                return "Password is not correct";
+        else
+            return "Username not found";
+    }
 }

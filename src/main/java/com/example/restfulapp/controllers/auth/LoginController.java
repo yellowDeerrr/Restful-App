@@ -1,7 +1,7 @@
 package com.example.restfulapp.controllers.auth;
 
 import com.example.restfulapp.payload.response.LoginResponse;
-import com.example.restfulapp.payload.request.LoginRequest;
+import com.example.restfulapp.payload.request.auth.LoginRequest;
 import com.example.restfulapp.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
