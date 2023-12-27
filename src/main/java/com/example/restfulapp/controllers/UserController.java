@@ -2,6 +2,7 @@ package com.example.restfulapp.controllers;
 
 import com.example.restfulapp.entity.UserEntity;
 import com.example.restfulapp.payload.request.auth.LoginRequest;
+import com.example.restfulapp.payload.request.user.delete.PasswordRequest;
 import com.example.restfulapp.payload.request.user.edit.EditPasswordRequest;
 import com.example.restfulapp.payload.request.user.edit.EditUsernameRequest;
 import com.example.restfulapp.payload.response.LoginResponse;
@@ -42,8 +43,9 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/account")
-    public ResponseEntity<?> deleteAccount(@RequestBody LoginRequest usernameAndPassword){
-        String res = userService.deleteAccount(usernameAndPassword.getUsername(), usernameAndPassword.getPassword());
+    public ResponseEntity<?> deleteAccount(@RequestBody PasswordRequest password, Authentication authentication){
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        String res = userService.deleteAccount(customUserDetails.getUsername(), password.getPassword());
         return res.equals("Successful") ? ResponseEntity.ok(res) : ResponseEntity.badRequest().body(res);
     }
 }
